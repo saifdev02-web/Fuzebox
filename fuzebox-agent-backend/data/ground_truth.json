@@ -1,0 +1,194 @@
+{
+  "REQ-001": {
+    "classification": {
+      "expected": "access_auth",
+      "acceptable": ["access_auth"]
+    },
+    "triage": {
+      "expected_priority": 4,
+      "acceptable_range": [3, 5]
+    },
+    "draft": {
+      "must_contain": ["password", "reset", "account"],
+      "must_not_contain": ["billing", "refund"],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-002": {
+    "classification": {
+      "expected": "billing",
+      "acceptable": ["billing"]
+    },
+    "triage": {
+      "expected_priority": 4,
+      "acceptable_range": [3, 5]
+    },
+    "draft": {
+      "must_contain": ["charge", "billing", "review"],
+      "must_not_contain": ["cancel", "terminate"],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-003": {
+    "classification": {
+      "expected": "outage",
+      "acceptable": ["outage"]
+    },
+    "triage": {
+      "expected_priority": 5,
+      "acceptable_range": [4, 5]
+    },
+    "draft": {
+      "must_contain": ["outage", "team", "investigating"],
+      "must_not_contain": [],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-004": {
+    "classification": {
+      "expected": "account_update",
+      "acceptable": ["account_update"]
+    },
+    "triage": {
+      "expected_priority": 1,
+      "acceptable_range": [1, 2]
+    },
+    "draft": {
+      "must_contain": ["email", "update"],
+      "must_not_contain": ["urgent", "critical"],
+      "expected_tone": "professional",
+      "max_words": 150
+    }
+  },
+  "REQ-005": {
+    "classification": {
+      "expected": "escalation",
+      "acceptable": ["escalation"]
+    },
+    "triage": {
+      "expected_priority": 4,
+      "acceptable_range": [3, 5]
+    },
+    "draft": {
+      "must_contain": ["manager", "escalat"],
+      "must_not_contain": [],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-006": {
+    "classification": {
+      "expected": "migration",
+      "acceptable": ["migration", "account_update"]
+    },
+    "triage": {
+      "expected_priority": 3,
+      "acceptable_range": [2, 4]
+    },
+    "draft": {
+      "must_contain": ["migration", "plan", "timeline"],
+      "must_not_contain": [],
+      "expected_tone": "professional",
+      "max_words": 200
+    }
+  },
+  "REQ-007": {
+    "classification": {
+      "expected": "bug_report",
+      "acceptable": ["bug_report", "technical_api"]
+    },
+    "triage": {
+      "expected_priority": 3,
+      "acceptable_range": [2, 4]
+    },
+    "draft": {
+      "must_contain": ["issue", "team"],
+      "must_not_contain": [],
+      "expected_tone": "professional",
+      "max_words": 200
+    }
+  },
+  "REQ-008": {
+    "classification": {
+      "expected": "cancellation",
+      "acceptable": ["cancellation"]
+    },
+    "triage": {
+      "expected_priority": 2,
+      "acceptable_range": [1, 3]
+    },
+    "draft": {
+      "must_contain": ["cancel", "refund"],
+      "must_not_contain": [],
+      "expected_tone": "professional",
+      "max_words": 150
+    }
+  },
+  "REQ-009": {
+    "classification": {
+      "expected": "technical_api",
+      "acceptable": ["technical_api", "bug_report"]
+    },
+    "triage": {
+      "expected_priority": 5,
+      "acceptable_range": [4, 5]
+    },
+    "draft": {
+      "must_contain": ["API", "team", "investigating"],
+      "must_not_contain": [],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-010": {
+    "classification": {
+      "expected": "general_inquiry",
+      "acceptable": ["general_inquiry"]
+    },
+    "triage": {
+      "expected_priority": 1,
+      "acceptable_range": [1, 2]
+    },
+    "draft": {
+      "must_contain": ["thank", "feedback"],
+      "must_not_contain": ["urgent", "critical"],
+      "expected_tone": "concise",
+      "max_words": 150
+    }
+  },
+  "REQ-011": {
+    "classification": {
+      "expected": "access_auth",
+      "acceptable": ["access_auth", "billing"]
+    },
+    "triage": {
+      "expected_priority": 5,
+      "acceptable_range": [4, 5]
+    },
+    "draft": {
+      "must_contain": ["account", "security", "investigat"],
+      "must_not_contain": [],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  },
+  "REQ-012": {
+    "classification": {
+      "expected": "technical_api",
+      "acceptable": ["technical_api", "access_auth", "outage"]
+    },
+    "triage": {
+      "expected_priority": 5,
+      "acceptable_range": [4, 5]
+    },
+    "draft": {
+      "must_contain": ["SSO", "team"],
+      "must_not_contain": [],
+      "expected_tone": "empathetic",
+      "max_words": 200
+    }
+  }
+}

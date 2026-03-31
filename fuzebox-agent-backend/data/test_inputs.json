@@ -1,0 +1,86 @@
+[
+  {
+    "id": "REQ-001",
+    "input_text": "I can't log in to my account. I've tried resetting my password three times and it still says invalid credentials. This is urgent, I need access for a client meeting in 30 minutes.",
+    "category": "access_auth",
+    "expected_priority": 4,
+    "notes": "High urgency due to time constraint"
+  },
+  {
+    "id": "REQ-002",
+    "input_text": "Our billing shows we were charged $4,500 this month but our plan is only $299/month. This is unacceptable and needs to be fixed IMMEDIATELY.",
+    "category": "billing",
+    "expected_priority": 4,
+    "notes": "Angry customer, significant overcharge"
+  },
+  {
+    "id": "REQ-003",
+    "input_text": "The entire platform has been down for the last 2 hours. None of our team can access any features. We have 200+ users affected and are losing revenue every minute.",
+    "category": "outage",
+    "expected_priority": 5,
+    "notes": "Critical production outage, enterprise customer"
+  },
+  {
+    "id": "REQ-004",
+    "input_text": "Hi, I'd like to update the email address on my account from john@old.com to john@new.com. Also please update my phone number to 555-0199.",
+    "category": "account_update",
+    "expected_priority": 1,
+    "notes": "Simple, non-urgent request"
+  },
+  {
+    "id": "REQ-005",
+    "input_text": "I've spoken to three different agents about this issue and nobody has resolved it. I want to speak to a manager immediately. Your service has been terrible and I'm considering switching to a competitor.",
+    "category": "escalation",
+    "expected_priority": 4,
+    "notes": "Escalation request, frustrated customer"
+  },
+  {
+    "id": "REQ-006",
+    "input_text": "We need to migrate 500 user accounts from our starter plan to the enterprise plan by end of week. Can you provide a migration timeline and any data transfer requirements?",
+    "category": "migration",
+    "expected_priority": 3,
+    "notes": "Large migration, moderate urgency"
+  },
+  {
+    "id": "REQ-007",
+    "input_text": "When I click the export button on the reports page, the browser crashes and shows a white screen. This happens in Chrome 120 on Windows 11. I've attached a screenshot.",
+    "category": "bug_report",
+    "expected_priority": 3,
+    "notes": "Reproducible bug with details"
+  },
+  {
+    "id": "REQ-008",
+    "input_text": "I want to cancel my subscription effective immediately. Please process a full refund for the current billing cycle. I no longer need the service.",
+    "category": "cancellation",
+    "expected_priority": 2,
+    "notes": "Straightforward cancellation"
+  },
+  {
+    "id": "REQ-009",
+    "input_text": "Our API integration is returning 500 errors on the /users/bulk endpoint. We're sending POST requests with valid JSON payloads. Here's the error trace: ConnectionTimeout after 30s. This is blocking our production deployment.",
+    "category": "technical_api",
+    "expected_priority": 5,
+    "notes": "Production-blocking API issue"
+  },
+  {
+    "id": "REQ-010",
+    "input_text": "Just wanted to say your new dashboard redesign is amazing! The analytics features are exactly what we needed. Any plans to add custom report templates in the future?",
+    "category": "general_inquiry",
+    "expected_priority": 1,
+    "notes": "Positive feedback with feature request"
+  },
+  {
+    "id": "REQ-011",
+    "input_text": "I can't log in AND I'm being charged for a plan I never signed up for. Someone may have accessed my account without permission. Please investigate immediately.",
+    "category": "access_auth",
+    "expected_priority": 5,
+    "notes": "Blended: access_auth + billing + potential security breach"
+  },
+  {
+    "id": "REQ-012",
+    "input_text": "Our SSO integration with Okta stopped working after your latest update. 50 employees can't log in. We need this fixed within the hour or we'll have to roll back to the previous version.",
+    "category": "technical_api",
+    "expected_priority": 5,
+    "notes": "Integration failure, high urgency, enterprise impact"
+  }
+]
