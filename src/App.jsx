@@ -9,6 +9,13 @@ import WorkflowTraces from './pages/WorkflowTraces';
 import ScenarioBuilder from './pages/ScenarioBuilder';
 import PresentationMode from './pages/PresentationMode';
 
+// V2 pages
+import TelemetryConsole from './pages/v2/TelemetryConsole';
+import TrainingDials from './pages/v2/TrainingDials';
+import TrainingCycle from './pages/v2/TrainingCycle';
+import BeforeAfter from './pages/v2/BeforeAfter';
+import RatioShift from './pages/v2/RatioShift';
+
 function AppContent() {
   const { currentPage, presentationMode } = useApp();
 
@@ -24,6 +31,12 @@ function AppContent() {
     'Performance Metrics': PerformanceMetrics,
     'Workflow Traces': WorkflowTraces,
     'Scenario Builder': ScenarioBuilder,
+    // V2 pages
+    'Telemetry Console': TelemetryConsole,
+    'Training Dials': TrainingDials,
+    'Training Cycle': TrainingCycle,
+    'Before / After': BeforeAfter,
+    'Ratio Shift': RatioShift,
   };
 
   const Page = pages[currentPage] || Overview;
