@@ -5,8 +5,22 @@ from sqlalchemy.orm import DeclarativeBase
 
 from .config import settings
 
+
+def _ensure_asyncpg_url(url: str) -> str:
+    """Ensure the database URL uses the asyncpg driver.
+
+    Railway injects DATABASE_URL with 'postgresql://' which triggers psycopg2.
+    We need 'postgresql+asyncpg://' for async SQLAlchemy.
+    """
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+asyncpg://", 1)
+    return url
+
+
 engine = create_async_engine(
-    settings.database_url,
+    _ensure_asyncpg_url(settings.database_url),
     echo=False,
     pool_size=5,
     max_overflow=10,
