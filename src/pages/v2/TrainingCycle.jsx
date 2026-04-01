@@ -205,8 +205,9 @@ export default function TrainingCycle() {
     const stepPromise = simulateSteps(version, setSteps);
 
     try {
-      const runFn = version === 'v1' ? runV1 : runV2;
-      const result = await runFn(input, null, iteration);
+      const result = version === 'v1'
+        ? await runV1(input, iteration)
+        : await runV2(input, null, iteration);
 
       // Wait for step animation to finish
       await stepPromise;
