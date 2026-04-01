@@ -162,8 +162,8 @@ REFLECT_CLASSIFIER = (
     "Previous output: {previous_output}\n\n"
     "If the classification is correct and confidence is above {threshold}, "
     "return it unchanged. Otherwise, provide a corrected classification.\n\n"
-    "Return JSON: {\"classification\": ..., \"confidence\": ..., "
-    "\"reasoning\": ..., \"was_corrected\": true|false}"
+    'Return JSON: {{"classification": ..., "confidence": ..., '
+    '"reasoning": ..., "was_corrected": true|false}}'
 )
 
 REFLECT_TRIAGE = (
@@ -175,8 +175,8 @@ REFLECT_TRIAGE = (
     "Customer context (if available): {customer_context}\n\n"
     "If the score is appropriate, return it unchanged. "
     "Otherwise, provide a corrected score.\n\n"
-    "Return JSON: {\"priority\": ..., \"rationale\": ..., "
-    "\"was_corrected\": true|false}"
+    'Return JSON: {{"priority": ..., "rationale": ..., '
+    '"was_corrected": true|false}}'
 )
 
 REFLECT_DRAFTER = (
@@ -190,8 +190,8 @@ REFLECT_DRAFTER = (
     "Previous output: {previous_output}\n\n"
     "If the response is good, return it unchanged. "
     "Otherwise, provide a revised response.\n\n"
-    "Return JSON: {\"response\": ..., \"sentiment_flag\": ..., "
-    "\"tone_used\": ..., \"was_corrected\": true|false}"
+    'Return JSON: {{"response": ..., "sentiment_flag": ..., '
+    '"tone_used": ..., "was_corrected": true|false}}'
 )
 
 
