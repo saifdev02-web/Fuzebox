@@ -21,10 +21,15 @@ from app.telemetry.metrics import (
 # ── Cost calculation tests ───────────────────────────────────────────────
 
 class TestCostCalculation:
-    def test_gpt4o_mini_cost(self):
-        cost = calculate_cost("gpt-4o-mini", 1000, 500)
-        # 1000/1000 * 0.00015 + 500/1000 * 0.0006 = 0.00015 + 0.0003 = 0.00045
-        assert abs(cost - 0.00045) < 0.0001
+    def test_gpt54_mini_cost(self):
+        cost = calculate_cost("gpt-5.4-mini", 1000, 500)
+        # 1000/1000 * 0.0004 + 500/1000 * 0.0016 = 0.0004 + 0.0008 = 0.0012
+        assert abs(cost - 0.0012) < 0.0001
+
+    def test_gpt41_nano_cost(self):
+        cost = calculate_cost("gpt-4.1-nano", 1000, 500)
+        # 1000/1000 * 0.0001 + 500/1000 * 0.0004 = 0.0001 + 0.0002 = 0.0003
+        assert abs(cost - 0.0003) < 0.0001
 
     def test_unknown_model_uses_default(self):
         cost = calculate_cost("unknown-model", 1000, 1000)

@@ -11,9 +11,9 @@ class Settings(BaseSettings):
 
     # LLM
     openai_api_key: str = ""
-    openai_model: str = "gpt-4o-mini"
-    evaluator_model: str = "o3-mini"
-    fallback_model: str = "gpt-3.5-turbo"
+    openai_model: str = "gpt-5.4-mini"
+    evaluator_model: str = "gpt-5.4-mini"
+    fallback_model: str = "gpt-4.1-nano"
 
     # CORS
     cors_origins: str = "http://localhost:5173"

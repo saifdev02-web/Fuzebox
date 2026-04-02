@@ -11,9 +11,17 @@ from ..models.telemetry import AgentTelemetry
 
 # Model pricing per 1K tokens (input, output)
 MODEL_PRICING: dict[str, tuple[float, float]] = {
+    # GPT-5.4 family (latest generation)
+    "gpt-5.4-mini": (0.0004, 0.0016),
+    # GPT-4.1 family
+    "gpt-4.1": (0.002, 0.008),
+    "gpt-4.1-mini": (0.0004, 0.0016),
+    "gpt-4.1-nano": (0.0001, 0.0004),
+    # Legacy models (kept for historical telemetry)
     "gpt-4o-mini": (0.00015, 0.0006),
     "gpt-4o": (0.0025, 0.01),
     "gpt-3.5-turbo": (0.0005, 0.0015),
+    # Reasoning models
     "o3-mini": (0.0011, 0.0044),
     "o4-mini": (0.0011, 0.0044),
 }
@@ -34,7 +42,7 @@ class TelemetryCollector:
         run_version: str,
         iteration: int = 1,
         tuning_params: dict | None = None,
-        model_name: str = "gpt-4o-mini",
+        model_name: str = "gpt-5.4-mini",
     ):
         self.run_id = run_id
         self.run_version = run_version
