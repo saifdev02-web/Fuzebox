@@ -334,7 +334,7 @@ export default function RatioShift() {
                 <div style={s.ropDetail}>
                   {ropData && (
                     <>
-                      Agent cost: ${ropData.v2?.agent_cost?.toFixed(2) || '0'}<br />
+                      Agent cost: ${ropData.v2?.agent_cost?.toFixed(4) || '0'}<br />
                       Manual equivalent: ${ropData.v2?.manual_equivalent?.toFixed(2) || '0'}<br />
                       Net savings: ${ropData.v2?.savings?.toFixed(2) || '0'}
                     </>

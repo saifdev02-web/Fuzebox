@@ -71,17 +71,29 @@ def human_to_agent_ratio(rows: list[dict]) -> dict:
     else:
         ratio = float("inf")
 
+    # Build human-friendly ratio display
+    if tasks_by_humans == 0:
+        ratio_display = "Fully automated"
+    elif ratio > 0 and ratio != float("inf"):
+        ratio_display = f"1:{round(1 / ratio, 1)}"
+    else:
+        ratio_display = "N/A"
+
     return {
         "total_tasks": total,
         "tasks_handled_by_agents": round(tasks_by_agents, 1),
         "tasks_requiring_humans": round(tasks_by_humans, 1),
-        "ratio": round(ratio, 2),
-        "ratio_display": f"1:{round(1 / ratio, 1)}" if ratio > 0 else "N/A",
+        "ratio": round(ratio, 2) if ratio != float("inf") else 0,
+        "ratio_display": ratio_display,
     }
 
 
 def rop(rows: list[dict], manual_cost_per_task: float = 50.0) -> dict:
-    """Return on Potential calculation."""
+    """Return on Potential calculation.
+
+    RoP = percentage of manual cost saved by using AI agents.
+    100% = AI costs nothing vs manual; 0% = AI costs the same as manual.
+    """
     cr = completion_rate(rows)
     esc = escalation_rate(rows)
     total = len(rows)
@@ -91,10 +103,12 @@ def rop(rows: list[dict], manual_cost_per_task: float = 50.0) -> dict:
     manual_equivalent = tasks_by_agents * manual_cost_per_task
     savings = manual_equivalent - agent_cost
 
-    rop_pct = (savings / agent_cost * 100) if agent_cost > 0 else 0
+    # Use savings as % of manual cost (bounded 0–100%)
+    rop_pct = (savings / manual_equivalent * 100) if manual_equivalent > 0 else 0
+    rop_pct = min(100.0, max(0.0, rop_pct))
 
     return {
-        "agent_cost": round(agent_cost, 2),
+        "agent_cost": round(agent_cost, 4),
         "manual_equivalent": round(manual_equivalent, 2),
         "savings": round(savings, 2),
         "rop_pct": round(rop_pct, 1),
