@@ -114,6 +114,16 @@ const tableColumns = [
       {v === 'success' ? '✓' : '✗'} {v}
     </span>
   )},
+  { key: 'accuracy_score', label: 'Accuracy', render: (v) => v != null ? (
+    <span style={{ fontWeight: 600, color: v >= 0.7 ? 'var(--success)' : v >= 0.4 ? 'var(--warning)' : 'var(--danger)' }}>
+      {(v * 100).toFixed(0)}%
+    </span>
+  ) : '—' },
+  { key: 'auop_score', label: 'AUoP', render: (v) => v != null ? (
+    <span style={{ fontWeight: 600, color: v >= 0.7 ? 'var(--success)' : v >= 0.4 ? 'var(--warning)' : 'var(--danger)' }}>
+      {(v * 100).toFixed(0)}%
+    </span>
+  ) : '—' },
   { key: 'latency_ms', label: 'Latency', render: (v) => `${Math.round(v)}ms` },
   { key: 'cost_usd', label: 'Cost', render: (v) => `$${v?.toFixed(4) || '0'}` },
   { key: 'input_tokens', label: 'In Tok' },

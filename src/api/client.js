@@ -36,6 +36,10 @@ export function getUsageSummary() {
 
 // ── Runs ─────────────────────────────────────────────────────────────────
 
+export function getTestInputs() {
+  return request('/run/test-inputs');
+}
+
 export function runV1(inputText, iteration = 1) {
   return request('/run/v1', {
     method: 'POST',

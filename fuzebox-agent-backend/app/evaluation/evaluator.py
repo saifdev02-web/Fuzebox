@@ -204,6 +204,17 @@ def _fallback_draft_score(draft_text: str, gt: dict) -> dict:
     }
 
 
+def score_draft(draft_output: dict, ground_truth: dict) -> dict:
+    """Programmatic draft scoring (fast, no LLM call).
+
+    Use this during pipeline runs for low-latency scoring.
+    Use score_draft_llm() for higher-accuracy batch evaluation.
+    """
+    draft_text = draft_output.get("response", str(draft_output))
+    gt_draft = ground_truth.get("draft", {})
+    return _fallback_draft_score(draft_text, gt_draft)
+
+
 async def evaluate_run(
     request_id: str,
     input_text: str,

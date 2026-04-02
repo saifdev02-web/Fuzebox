@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { RefreshCw, Play, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react';
-import { runV1, runV2 } from '../../api/client';
+import { runV1, runV2, getTestInputs } from '../../api/client';
 
-const TEST_INPUTS = [
+const FALLBACK_INPUTS = [
   "I can't log in to my account. I've tried resetting my password three times and it still says invalid credentials.",
   "Our billing shows we were charged $4,500 this month but our plan is only $299/month.",
   "The entire platform has been down for the last 2 hours. None of our team can access any features.",
@@ -163,9 +163,25 @@ const s = {
     fontSize: '0.82rem',
     marginBottom: 6,
   },
+  evalSection: {
+    marginTop: 12,
+    padding: '10px 12px',
+    background: 'rgba(16,185,129,0.05)',
+    borderRadius: 'var(--radius-xs)',
+    border: '1px solid rgba(16,185,129,0.15)',
+  },
+  evalTitle: {
+    fontSize: '0.72rem',
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    color: 'var(--success)',
+    marginBottom: 6,
+    letterSpacing: '0.06em',
+  },
 };
 
 export default function TrainingCycle() {
+  const [testInputs, setTestInputs] = useState([]);
   const [selectedInput, setSelectedInput] = useState(0);
   const [customInput, setCustomInput] = useState('');
   const [iteration, setIteration] = useState(1);
@@ -175,7 +191,37 @@ export default function TrainingCycle() {
   const [v2Result, setV2Result] = useState(null);
   const [running, setRunning] = useState({ v1: false, v2: false });
 
-  const getInput = () => customInput || TEST_INPUTS[selectedInput];
+  // Load test inputs from backend on mount
+  useEffect(() => {
+    getTestInputs()
+      .then((data) => {
+        if (data?.inputs?.length) {
+          setTestInputs(data.inputs);
+        } else {
+          // Fallback to hardcoded inputs if backend unavailable
+          setTestInputs(FALLBACK_INPUTS.map((text, i) => ({
+            id: `LOCAL-${i + 1}`,
+            input_text: text,
+            category: '',
+            notes: '',
+          })));
+        }
+      })
+      .catch(() => {
+        setTestInputs(FALLBACK_INPUTS.map((text, i) => ({
+          id: `LOCAL-${i + 1}`,
+          input_text: text,
+          category: '',
+          notes: '',
+        })));
+      });
+  }, []);
+
+  const getInput = () => {
+    if (customInput) return customInput;
+    const item = testInputs[selectedInput];
+    return item?.input_text || item || '';
+  };
 
   const simulateSteps = async (version, setSteps) => {
     const steps = version === 'v1'
@@ -184,24 +230,21 @@ export default function TrainingCycle() {
 
     for (let i = 0; i < steps.length; i++) {
       setSteps((prev) => ({ ...prev, [steps[i].key]: 'running' }));
-      // Small delay to show progress
       await new Promise((r) => setTimeout(r, 300));
     }
   };
 
   const handleRun = useCallback(async (version) => {
     const input = getInput();
-    if (!input.trim()) return;
+    if (!input || !input.trim()) return;
 
     setRunning((prev) => ({ ...prev, [version]: true }));
     const setSteps = version === 'v1' ? setV1Steps : setV2Steps;
     const setResult = version === 'v1' ? setV1Result : setV2Result;
 
-    // Reset steps
     setSteps({});
     setResult(null);
 
-    // Simulate step-by-step progress
     const stepPromise = simulateSteps(version, setSteps);
 
     try {
@@ -209,10 +252,8 @@ export default function TrainingCycle() {
         ? await runV1(input, iteration)
         : await runV2(input, null, iteration);
 
-      // Wait for step animation to finish
       await stepPromise;
 
-      // Mark all steps done
       const steps = version === 'v1'
         ? PIPELINE_STEPS.filter((s) => !s.v2Only)
         : PIPELINE_STEPS;
@@ -226,7 +267,7 @@ export default function TrainingCycle() {
     } finally {
       setRunning((prev) => ({ ...prev, [version]: false }));
     }
-  }, [selectedInput, customInput, iteration]);
+  }, [testInputs, selectedInput, customInput, iteration]);
 
   const renderTimeline = (version) => {
     const steps = version === 'v1'
@@ -261,7 +302,11 @@ export default function TrainingCycle() {
           <div style={s.resultCard}>
             <div style={s.resultRow}>
               <span style={{ color: 'var(--text-secondary)' }}>Classification</span>
-              <span style={{ fontWeight: 600 }}>{result.classification?.classification || '—'}</span>
+              <span style={{ fontWeight: 600 }}>
+                {Array.isArray(result.classification?.classification)
+                  ? result.classification.classification.join(', ')
+                  : result.classification?.classification || '—'}
+              </span>
             </div>
             <div style={s.resultRow}>
               <span style={{ color: 'var(--text-secondary)' }}>Confidence</span>
@@ -281,6 +326,53 @@ export default function TrainingCycle() {
                 {(result.telemetry_summary?.total_input_tokens || 0) + (result.telemetry_summary?.total_output_tokens || 0)}
               </span>
             </div>
+
+            {/* Evaluation Scores */}
+            {result.evaluation && (
+              <div style={s.evalSection}>
+                <div style={s.evalTitle}>Accuracy Scores (vs Ground Truth)</div>
+                <div style={s.resultRow}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Classification Accuracy</span>
+                  <span style={{ fontWeight: 600, color: 'var(--success)' }}>
+                    {((result.evaluation.agent_1_accuracy || 0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <div style={s.resultRow}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Triage Accuracy</span>
+                  <span style={{ fontWeight: 600, color: 'var(--success)' }}>
+                    {((result.evaluation.agent_2_accuracy || 0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <div style={s.resultRow}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Draft Quality</span>
+                  <span style={{ fontWeight: 600, color: 'var(--success)' }}>
+                    {((result.evaluation.agent_3_accuracy || 0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <div style={{ ...s.resultRow, borderTop: '1px solid rgba(16,185,129,0.15)', paddingTop: 6, marginTop: 4 }}>
+                  <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Overall Accuracy</span>
+                  <span style={{ fontWeight: 700, color: 'var(--success)', fontSize: '0.92rem' }}>
+                    {((result.evaluation.overall_accuracy || 0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Reflections (V2 only) */}
+            {result.telemetry_summary?.reflections && (
+              <div style={{ ...s.evalSection, background: 'rgba(232,132,42,0.05)', borderColor: 'rgba(232,132,42,0.15)', marginTop: 8 }}>
+                <div style={{ ...s.evalTitle, color: 'var(--accent)' }}>ReAct Reflections</div>
+                {Object.entries(result.telemetry_summary.reflections).map(([name, info]) => (
+                  <div key={name} style={s.resultRow}>
+                    <span style={{ color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{name}</span>
+                    <span style={{ fontWeight: 600, color: info.was_corrected ? 'var(--accent)' : 'var(--text-secondary)' }}>
+                      {info.was_corrected ? 'Corrected' : 'Confirmed'} ({Math.round(info.latency_ms)}ms)
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {result.draft?.response && (
               <div style={{ marginTop: 10 }}>
                 <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4, textTransform: 'uppercase' }}>Draft Response</div>
@@ -316,11 +408,23 @@ export default function TrainingCycle() {
           onChange={(e) => { setSelectedInput(Number(e.target.value)); setCustomInput(''); }}
           aria-label="Select test input"
         >
-          {TEST_INPUTS.map((inp, i) => (
-            <option key={i} value={i}>{inp.slice(0, 80)}...</option>
+          {testInputs.map((inp, i) => (
+            <option key={inp.id || i} value={i}>
+              [{inp.id}] {(inp.input_text || inp).slice(0, 90)}...
+            </option>
           ))}
           <option value={-1}>Custom input...</option>
         </select>
+
+        {/* Show selected input details */}
+        {selectedInput >= 0 && testInputs[selectedInput] && (
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 10, padding: '8px 10px', background: 'var(--bg)', borderRadius: 'var(--radius-xs)' }}>
+            <strong>Category:</strong> {testInputs[selectedInput].category || 'N/A'}
+            {testInputs[selectedInput].notes && (
+              <> &nbsp;|&nbsp; <strong>Note:</strong> {testInputs[selectedInput].notes}</>
+            )}
+          </div>
+        )}
 
         {selectedInput === -1 && (
           <textarea
@@ -343,7 +447,6 @@ export default function TrainingCycle() {
             onChange={(e) => setIteration(Number(e.target.value))}
             style={{ width: 120, accentColor: 'var(--accent)', marginLeft: 8 }}
             aria-label="Iteration number"
-            disabled={iteration >= 10}
           />
         </div>
 

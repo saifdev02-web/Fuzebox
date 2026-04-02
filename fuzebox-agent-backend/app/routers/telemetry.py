@@ -106,12 +106,21 @@ async def get_all_telemetry(
 
 @router.get("/comparison/delta")
 async def comparison(db: AsyncSession = Depends(get_db)):
-    """V1 vs V2 comparison — measured deltas from actual telemetry."""
+    """V1 vs V2 comparison — measured deltas from actual telemetry.
+
+    Only includes the 3 main agents (excludes reflection telemetry rows)
+    to prevent inflated V2 metrics.
+    """
+    main_agents = ["intake_classifier", "triage_scorer", "response_drafter"]
     v1_result = await db.execute(
-        select(AgentTelemetry).where(AgentTelemetry.run_version == "v1")
+        select(AgentTelemetry)
+        .where(AgentTelemetry.run_version == "v1")
+        .where(AgentTelemetry.agent_id.in_(main_agents))
     )
     v2_result = await db.execute(
-        select(AgentTelemetry).where(AgentTelemetry.run_version == "v2")
+        select(AgentTelemetry)
+        .where(AgentTelemetry.run_version == "v2")
+        .where(AgentTelemetry.agent_id.in_(main_agents))
     )
 
     v1_rows = _rows_to_dicts(v1_result.scalars().all())
