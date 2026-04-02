@@ -3,6 +3,7 @@ import {
   LayoutDashboard, ClipboardList, CheckSquare, DollarSign,
   Gauge, GitBranch, Settings, Database,
   Activity, SlidersHorizontal, RefreshCw, ArrowLeftRight, TrendingUp,
+  Monitor, PlayCircle, FileText,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import styles from './Sidebar.module.css';
@@ -23,6 +24,9 @@ const v2Pages = [
   { key: 'Training Cycle', icon: RefreshCw },
   { key: 'Before / After', icon: ArrowLeftRight },
   { key: 'Ratio Shift', icon: TrendingUp },
+  { key: 'Live Demo', icon: Monitor },
+  { key: 'Batch Runner', icon: PlayCircle },
+  { key: 'Executive Summary', icon: FileText },
 ];
 
 export default function Sidebar() {

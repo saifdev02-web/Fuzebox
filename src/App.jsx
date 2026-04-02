@@ -15,6 +15,9 @@ import TrainingDials from './pages/v2/TrainingDials';
 import TrainingCycle from './pages/v2/TrainingCycle';
 import BeforeAfter from './pages/v2/BeforeAfter';
 import RatioShift from './pages/v2/RatioShift';
+import LiveDemo from './pages/v2/LiveDemo';
+import BatchRunner from './pages/v2/BatchRunner';
+import ExecutiveSummary from './pages/v2/ExecutiveSummary';
 
 function AppContent() {
   const { currentPage, presentationMode } = useApp();
@@ -37,6 +40,9 @@ function AppContent() {
     'Training Cycle': TrainingCycle,
     'Before / After': BeforeAfter,
     'Ratio Shift': RatioShift,
+    'Live Demo': LiveDemo,
+    'Batch Runner': BatchRunner,
+    'Executive Summary': ExecutiveSummary,
   };
 
   const Page = pages[currentPage] || Overview;
