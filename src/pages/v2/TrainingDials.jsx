@@ -184,7 +184,7 @@ export default function TrainingDials() {
       setMessage({ type: 'error', text: e.message });
     } finally {
       setSaving((prev) => ({ ...prev, [agentId]: false }));
-      setTimeout(() => setMessage(null), 3000);
+      setTimeout(() => setMessage(null), 5000);
     }
   };
 
@@ -196,7 +196,7 @@ export default function TrainingDials() {
     } catch (e) {
       setMessage({ type: 'error', text: e.message });
     }
-    setTimeout(() => setMessage(null), 3000);
+    setTimeout(() => setMessage(null), 5000);
   };
 
   const handlePreset = (agentId) => {

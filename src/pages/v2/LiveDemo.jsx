@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Monitor, Play, CheckCircle, Clock, Zap, RefreshCw, Maximize2, Minimize2 } from 'lucide-react';
+import { Monitor, Play, CheckCircle, Clock, Zap, RefreshCw, Maximize2, Minimize2, DollarSign } from 'lucide-react';
 import { runV1, runV2, getTestInputs } from '../../api/client';
 
 const PIPELINE_STEPS_V1 = [
@@ -26,6 +26,7 @@ export default function LiveDemo() {
   const [fullscreen, setFullscreen] = useState(false);
   const [testInputs, setTestInputs] = useState([]);
   const containerRef = useRef(null);
+  const resultsRef = useRef(null);
 
   useEffect(() => {
     getTestInputs()
@@ -75,6 +76,7 @@ export default function LiveDemo() {
       currentSteps.forEach((s) => { done[s.key] = 'done'; });
       setStepState(done);
       setResult(res);
+      setTimeout(() => resultsRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' }), 100);
     } catch (e) {
       setResult({ error: e.message });
     } finally {
@@ -177,12 +179,12 @@ export default function LiveDemo() {
 
       {/* Results */}
       {result && !result.error && (
-        <div style={s.card}>
+        <div style={s.card} ref={resultsRef}>
           <div style={s.cardTitle}>Results</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20, marginBottom: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginBottom: 20 }}>
             <div style={s.metricCard}>
               <div style={s.metricLabel}>Classification</div>
-              <div style={s.metricValue(fullscreen)}>
+              <div style={{ ...s.metricValue(fullscreen), fontSize: fullscreen ? '1.4rem' : '1.1rem' }}>
                 {Array.isArray(result.classification?.classification)
                   ? result.classification.classification.join(', ')
                   : result.classification?.classification || '—'}
@@ -200,6 +202,21 @@ export default function LiveDemo() {
               <div style={s.metricSub}>
                 {(result.telemetry_summary?.total_input_tokens || 0) + (result.telemetry_summary?.total_output_tokens || 0)} tokens
               </div>
+            </div>
+            <div style={s.metricCard}>
+              <div style={s.metricLabel}>Cost</div>
+              <div style={{ ...s.metricValue(fullscreen), color: 'var(--success)' }}>
+                <DollarSign size={fullscreen ? 18 : 14} style={{ verticalAlign: 'middle' }} />
+                {(result.telemetry_summary?.total_cost_usd || 0).toFixed(4)}
+              </div>
+              <div style={s.metricSub}>per run</div>
+            </div>
+            <div style={s.metricCard}>
+              <div style={s.metricLabel}>Model</div>
+              <div style={{ ...s.metricValue(fullscreen), fontSize: fullscreen ? '1.1rem' : '0.92rem' }}>
+                {result.telemetry_summary?.model_name || 'gpt-5.4-mini'}
+              </div>
+              <div style={s.metricSub}>{version.toUpperCase()} pipeline</div>
             </div>
           </div>
 
@@ -281,10 +298,6 @@ export default function LiveDemo() {
         </div>
       )}
 
-      <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spin { animation: spin 1s linear infinite; }
-      `}</style>
     </div>
   );
 }

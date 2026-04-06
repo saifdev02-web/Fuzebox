@@ -1,8 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Activity, RefreshCw } from 'lucide-react';
+import { Activity, RefreshCw, Database } from 'lucide-react';
 import KPICard from '../../components/KPICard';
 import DataTable from '../../components/DataTable';
 import { getAgentTelemetry } from '../../api/client';
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '—';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const secs = Math.floor(diff / 1000);
+  if (secs < 60) return `${secs}s ago`;
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return new Date(dateStr).toLocaleDateString();
+}
 
 const AGENTS = [
   { id: 'intake_classifier', name: 'Intake Classifier', color: 'var(--accent)' },
@@ -106,7 +118,9 @@ const s = {
 };
 
 const tableColumns = [
-  { key: 'timestamp', label: 'Time', render: (v) => v ? new Date(v).toLocaleTimeString() : '—' },
+  { key: 'timestamp', label: 'Time', render: (v) => v ? (
+    <span title={new Date(v).toLocaleString()}>{timeAgo(v)}</span>
+  ) : '—' },
   { key: 'run_version', label: 'Version' },
   { key: 'iteration', label: 'Iter' },
   { key: 'completion_status', label: 'Status', render: (v) => (
@@ -175,6 +189,23 @@ export default function TelemetryConsole() {
         </button>
         {error && <span style={{ color: 'var(--danger)', fontSize: '0.82rem' }} role="alert">{error}</span>}
       </div>
+
+      {/* Empty State */}
+      {!loading && Object.values(agentData).every((d) => !d?.count) && (
+        <div style={{
+          textAlign: 'center', padding: '48px 24px', marginBottom: 28,
+          background: 'var(--surface)', borderRadius: 'var(--radius)',
+          boxShadow: 'var(--shadow-card)',
+        }}>
+          <Database size={40} style={{ color: 'var(--border)', marginBottom: 12 }} />
+          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 6 }}>
+            No telemetry data yet
+          </div>
+          <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: 420, margin: '0 auto' }}>
+            Run a V1 or V2 pipeline from the Training Cycle or Live Demo page to start generating telemetry data.
+          </div>
+        </div>
+      )}
 
       {/* Agent Cards */}
       <div style={s.grid}>

@@ -326,6 +326,18 @@ export default function TrainingCycle() {
                 {(result.telemetry_summary?.total_input_tokens || 0) + (result.telemetry_summary?.total_output_tokens || 0)}
               </span>
             </div>
+            <div style={s.resultRow}>
+              <span style={{ color: 'var(--text-secondary)' }}>Cost</span>
+              <span style={{ fontWeight: 600, color: 'var(--success)' }}>
+                ${(result.telemetry_summary?.total_cost_usd || 0).toFixed(4)}
+              </span>
+            </div>
+            <div style={s.resultRow}>
+              <span style={{ color: 'var(--text-secondary)' }}>Model</span>
+              <span style={{ fontWeight: 600 }}>
+                {result.telemetry_summary?.model_name || 'gpt-5.4-mini'}
+              </span>
+            </div>
 
             {/* Evaluation Scores */}
             {result.evaluation && (

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { PlayCircle, CheckCircle, Clock, AlertCircle, BarChart3, RefreshCw } from 'lucide-react';
+import { PlayCircle, CheckCircle, Clock, AlertCircle, BarChart3, RefreshCw, DollarSign } from 'lucide-react';
 import { runV1, runV2, getTestInputs } from '../../api/client';
 
 export default function BatchRunner() {
@@ -87,6 +87,10 @@ export default function BatchRunner() {
       return count + Object.values(r.v2.telemetry_summary.reflections).filter((ref) => ref.was_corrected).length;
     }, 0);
 
+    const totalCost = allResults.reduce((sum, r) => {
+      return sum + (r.v1?.telemetry_summary?.total_cost_usd || 0) + (r.v2?.telemetry_summary?.total_cost_usd || 0);
+    }, 0);
+
     setSummary({
       total: testInputs.length,
       v1AvgAccuracy: v1Avg,
@@ -95,6 +99,7 @@ export default function BatchRunner() {
       v1AvgLatency: v1AvgLat,
       v2AvgLatency: v2AvgLat,
       v2Corrections,
+      totalCost,
       v1Errors: allResults.filter((r) => r.v1Status === 'error').length,
       v2Errors: allResults.filter((r) => r.v2Status === 'error').length,
     });
@@ -148,7 +153,7 @@ export default function BatchRunner() {
 
       {/* Summary Cards */}
       {summary && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginTop: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginTop: 20 }}>
           <div style={s.summaryCard}>
             <div style={s.summaryLabel}>V1 Avg Accuracy</div>
             <div style={s.summaryValue}>{(summary.v1AvgAccuracy * 100).toFixed(1)}%</div>
@@ -166,6 +171,12 @@ export default function BatchRunner() {
           <div style={s.summaryCard}>
             <div style={s.summaryLabel}>V2 Self-Corrections</div>
             <div style={{ ...s.summaryValue, color: 'var(--accent)' }}>{summary.v2Corrections}</div>
+          </div>
+          <div style={s.summaryCard}>
+            <div style={s.summaryLabel}>Total Batch Cost</div>
+            <div style={s.summaryValue}>
+              <DollarSign size={16} style={{ verticalAlign: 'middle' }} />{summary.totalCost.toFixed(4)}
+            </div>
           </div>
         </div>
       )}
@@ -218,10 +229,6 @@ export default function BatchRunner() {
         </div>
       )}
 
-      <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spin { animation: spin 1s linear infinite; }
-      `}</style>
     </div>
   );
 }

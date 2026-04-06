@@ -134,6 +134,22 @@ body {
 }
 .spin { animation: spin 1s linear infinite; }
 
+/* Button hover & disabled states */
+button {
+  transition: opacity 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+button:hover:not(:disabled) {
+  opacity: 0.88;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1400px) {
   .page-title {
