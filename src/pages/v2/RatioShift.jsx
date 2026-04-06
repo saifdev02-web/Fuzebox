@@ -255,6 +255,21 @@ export default function RatioShift() {
         <RefreshCw size={14} /> {loading ? 'Loading...' : 'Refresh'}
       </button>
 
+      {/* Loading State */}
+      {loading && !data && !error && (
+        <>
+          <div style={s.card}>
+            <div className="skeleton skeleton-text" style={{ width: 200, height: 16, marginBottom: 20 }} />
+            <div className="skeleton skeleton-bar" style={{ marginBottom: 24 }} />
+            <div className="skeleton skeleton-bar" />
+          </div>
+          <div style={{ ...s.grid, marginTop: 24 }}>
+            <div className="skeleton skeleton-card" style={{ height: 180 }} />
+            <div className="skeleton skeleton-card" style={{ height: 180 }} />
+          </div>
+        </>
+      )}
+
       {error ? (
         <div style={s.empty} role="alert">
           <p>{error}</p>
@@ -262,7 +277,7 @@ export default function RatioShift() {
             Run both V1 and V2 pipelines to see the ratio shift.
           </p>
         </div>
-      ) : (
+      ) : data && (
         <>
           {/* Ratio Bars */}
           <div style={s.card}>

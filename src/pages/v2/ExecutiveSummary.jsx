@@ -84,7 +84,22 @@ export default function ExecutiveSummary() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && !data && (
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton skeleton-card" style={{ height: 100 }} />
+              ))}
+            </div>
+            <div className="skeleton skeleton-card" style={{ height: 200, marginBottom: 24 }} />
+            <div className="skeleton skeleton-card" style={{ height: 160, marginBottom: 24 }} />
+            <div className="skeleton skeleton-card" style={{ height: 140 }} />
+          </>
+        )}
+
         {/* Key Metrics */}
+        {(!loading || data) && (<>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
           <MetricCard icon={Zap} label="Total Pipeline Runs" value={totalRuns} sub={`V1: ${v1Runs} | V2: ${v2Runs}`} />
           <MetricCard icon={TrendingUp} label="Accuracy Improvement" value={`+${((accuracyV2 - accuracyV1) * 100).toFixed(1)}%`} sub={`V1: ${(accuracyV1 * 100).toFixed(1)}% → V2: ${(accuracyV2 * 100).toFixed(1)}%`} color="var(--success)" />
@@ -228,6 +243,7 @@ export default function ExecutiveSummary() {
         <div style={{ textAlign: 'center', padding: '24px 0', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
           FuzeBox r·Potential &nbsp;|&nbsp; {totalTokens.toLocaleString()} tokens processed &nbsp;|&nbsp; Report generated {today}
         </div>
+        </>)}
       </div>
 
       {/* Print styles */}

@@ -222,6 +222,25 @@ export default function BeforeAfter() {
         )}
       </div>
 
+      {/* Loading State */}
+      {loading && !data && (
+        <>
+          <div style={s.overallSection}>
+            <div className="skeleton skeleton-text" style={{ width: 200, height: 20, margin: '0 auto 20px' }} />
+            <div style={s.overallGrid}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="skeleton skeleton-card" style={{ height: 100 }} />
+              ))}
+            </div>
+          </div>
+          <div style={{ ...s.grid, marginTop: 24 }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton skeleton-card" style={{ height: 200 }} />
+            ))}
+          </div>
+        </>
+      )}
+
       {/* Overall Comparison */}
       {data && (
         <div style={s.overallSection}>

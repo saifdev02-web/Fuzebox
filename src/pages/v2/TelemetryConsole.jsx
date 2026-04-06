@@ -189,32 +189,41 @@ export default function TelemetryConsole() {
                 <span style={s.agentName}>{agent.name}</span>
               </div>
 
-              <div style={s.kpiRow}>
-                <div style={s.miniKpi}>
-                  <div style={s.miniLabel}>Completion</div>
-                  <div style={s.miniValue}>{((metrics.completion_rate || 0) * 100).toFixed(0)}%</div>
+              {loading && !data ? (
+                <div>
+                  <div className="skeleton skeleton-text" style={{ width: '100%', height: 50, marginBottom: 10 }} />
+                  <div className="skeleton skeleton-text" style={{ width: '60%' }} />
                 </div>
-                <div style={s.miniKpi}>
-                  <div style={s.miniLabel}>Accuracy</div>
-                  <div style={s.miniValue}>{((metrics.accuracy || 0) * 100).toFixed(0)}%</div>
-                </div>
-                <div style={s.miniKpi}>
-                  <div style={s.miniLabel}>Escalation</div>
-                  <div style={s.miniValue}>{((metrics.escalation_rate || 0) * 100).toFixed(0)}%</div>
-                </div>
-                <div style={s.miniKpi}>
-                  <div style={s.miniLabel}>Avg Time</div>
-                  <div style={s.miniValue}>{(metrics.avg_task_time || 0).toFixed(1)}s</div>
-                </div>
-                <div style={s.miniKpi}>
-                  <div style={s.miniLabel}>AUoP</div>
-                  <div style={s.miniValue}>{((metrics.auop || 0) * 100).toFixed(0)}%</div>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <div style={s.kpiRow}>
+                    <div style={s.miniKpi}>
+                      <div style={s.miniLabel}>Completion</div>
+                      <div style={s.miniValue}>{((metrics.completion_rate || 0) * 100).toFixed(0)}%</div>
+                    </div>
+                    <div style={s.miniKpi}>
+                      <div style={s.miniLabel}>Accuracy</div>
+                      <div style={s.miniValue}>{((metrics.accuracy || 0) * 100).toFixed(0)}%</div>
+                    </div>
+                    <div style={s.miniKpi}>
+                      <div style={s.miniLabel}>Escalation</div>
+                      <div style={s.miniValue}>{((metrics.escalation_rate || 0) * 100).toFixed(0)}%</div>
+                    </div>
+                    <div style={s.miniKpi}>
+                      <div style={s.miniLabel}>Avg Time</div>
+                      <div style={s.miniValue}>{(metrics.avg_task_time || 0).toFixed(1)}s</div>
+                    </div>
+                    <div style={s.miniKpi}>
+                      <div style={s.miniLabel}>AUoP</div>
+                      <div style={s.miniValue}>{((metrics.auop || 0) * 100).toFixed(0)}%</div>
+                    </div>
+                  </div>
 
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                {data?.count || 0} telemetry rows
-              </div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    {data?.count || 0} telemetry rows
+                  </div>
+                </>
+              )}
             </div>
           );
         })}

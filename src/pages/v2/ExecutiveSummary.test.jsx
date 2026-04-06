@@ -105,7 +105,8 @@ describe('ExecutiveSummary', () => {
     await waitFor(() => {
       expect(screen.getByText('Total Pipeline Runs')).toBeInTheDocument();
       expect(screen.getByText('Accuracy Improvement')).toBeInTheDocument();
-      expect(screen.getByText('AUoP Score')).toBeInTheDocument();
+      // AUoP Score appears in both key metrics and comparison section
+      expect(screen.getAllByText('AUoP Score').length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText('Cost Per Run')).toBeInTheDocument();
     });
   });

@@ -26,57 +26,50 @@ export default function BatchRunner() {
     let current = 0;
     const allResults = [];
 
-    // Run V1 for all inputs
+    // Run V1 + V2 per input (faster feedback — see results per test case immediately)
     for (let i = 0; i < testInputs.length; i++) {
       const inp = testInputs[i];
-      setProgress({ current: current + 1, total, phase: `V1: ${inp.id}` });
+      const entry = {
+        id: inp.id,
+        input: inp.input_text.slice(0, 80) + '...',
+        category: inp.category,
+        v1: null,
+        v2: null,
+        v1Status: 'running',
+        v2Status: 'pending',
+      };
+      allResults.push(entry);
+      setResults([...allResults]);
 
+      // V1 run
+      setProgress({ current: current + 1, total, phase: `V1: ${inp.id}` });
       try {
         const v1 = await runV1(inp.input_text, 1);
-        const entry = {
-          id: inp.id,
-          input: inp.input_text.slice(0, 80) + '...',
-          category: inp.category,
-          v1: v1,
-          v2: null,
-          v1Status: 'done',
-          v2Status: 'pending',
-        };
-        allResults.push(entry);
-        setResults([...allResults]);
+        allResults[i].v1 = v1;
+        allResults[i].v1Status = 'done';
       } catch (e) {
-        allResults.push({
-          id: inp.id,
-          input: inp.input_text.slice(0, 80) + '...',
-          category: inp.category,
-          v1: { error: e.message },
-          v2: null,
-          v1Status: 'error',
-          v2Status: 'pending',
-        });
-        setResults([...allResults]);
+        allResults[i].v1 = { error: e.message };
+        allResults[i].v1Status = 'error';
       }
       current++;
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
+      allResults[i].v2Status = 'running';
+      setResults([...allResults]);
 
-    // Run V2 for all inputs
-    for (let i = 0; i < testInputs.length; i++) {
-      const inp = testInputs[i];
+      // V2 run (immediately after V1 for same input)
       setProgress({ current: current + 1, total, phase: `V2: ${inp.id}` });
-
       try {
         const v2 = await runV2(inp.input_text, null, 1);
         allResults[i].v2 = v2;
         allResults[i].v2Status = 'done';
-        setResults([...allResults]);
       } catch (e) {
         allResults[i].v2 = { error: e.message };
         allResults[i].v2Status = 'error';
-        setResults([...allResults]);
       }
       current++;
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setResults([...allResults]);
+      if (scrollRef.current?.scrollIntoView) {
+        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     // Calculate summary
@@ -236,8 +229,9 @@ export default function BatchRunner() {
 function renderStatus(status) {
   if (status === 'done') return <CheckCircle size={16} style={{ color: 'var(--success)' }} />;
   if (status === 'error') return <AlertCircle size={16} style={{ color: 'var(--danger)' }} />;
+  if (status === 'running') return <RefreshCw size={16} className="spin" style={{ color: 'var(--accent)' }} />;
   if (status === 'pending') return <Clock size={16} style={{ color: 'var(--text-secondary)' }} />;
-  return <Clock size={16} style={{ color: 'var(--accent)' }} />;
+  return <Clock size={16} style={{ color: 'var(--text-secondary)' }} />;
 }
 
 const s = {

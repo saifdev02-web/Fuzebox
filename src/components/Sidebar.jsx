@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, ClipboardList, CheckSquare, DollarSign,
   Gauge, GitBranch, Settings, Database,
@@ -6,6 +6,7 @@ import {
   Monitor, PlayCircle, FileText,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { getHealth } from '../api/client';
 import styles from './Sidebar.module.css';
 
 const v1Pages = [
@@ -40,6 +41,21 @@ export default function Sidebar() {
   } = useApp();
 
   const [loadResult, setLoadResult] = useState(null);
+  const [backendStatus, setBackendStatus] = useState('checking'); // 'online' | 'offline' | 'checking'
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        await getHealth();
+        setBackendStatus('online');
+      } catch {
+        setBackendStatus('offline');
+      }
+    };
+    checkHealth();
+    const interval = setInterval(checkHealth, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLoadDemo = () => {
     const summary = loadDemoData();
@@ -61,6 +77,21 @@ export default function Sidebar() {
           <span className={styles.logoName}>r·Potential</span>
           <span className={styles.logoPowered}>powered by FuzeBox</span>
         </div>
+      </div>
+
+      {/* Backend Status */}
+      <div className={styles.healthIndicator} aria-label={`Backend ${backendStatus}`}>
+        <div
+          className={
+            backendStatus === 'online' ? styles.healthDotOnline :
+            backendStatus === 'offline' ? styles.healthDotOffline :
+            styles.healthDotChecking
+          }
+        />
+        <span className={styles.healthText}>
+          {backendStatus === 'online' ? 'API Connected' :
+           backendStatus === 'offline' ? 'API Offline' : 'Connecting...'}
+        </span>
       </div>
 
       {/* Presentation Mode */}

@@ -57,6 +57,50 @@
   font-weight: 500;
 }
 
+/* Backend Health Indicator */
+.healthIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.healthDotOnline {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+.healthDotOffline {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  flex-shrink: 0;
+  animation: pulse-red 2s ease-in-out infinite;
+}
+
+.healthDotChecking {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warning);
+  flex-shrink: 0;
+}
+
+.healthText {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
 /* Presentation Mode Toggle */
 .presToggle {
   display: flex;
