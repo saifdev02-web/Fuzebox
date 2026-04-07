@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeftRight, TrendingUp, TrendingDown, Minus, RefreshCw } from 'lucide-react';
 import KPICard from '../../components/KPICard';
 import { getComparison } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 const AGENTS = [
   { id: 'intake_classifier', name: 'Intake Classifier' },
@@ -189,13 +190,13 @@ export default function BeforeAfter() {
           <ArrowLeftRight size={24} style={{ verticalAlign: 'middle', marginRight: 8, color: 'var(--accent)' }} />
           Before / After Comparison
         </h1>
-        <div style={s.empty} role="alert">
+        <div className={shared.emptyState} role="alert">
           <p>{error}</p>
           <p style={{ marginTop: 8, fontSize: '0.82rem' }}>
             Run both V1 and V2 pipelines in the Training Cycle page first.
           </p>
-          <button style={{ ...s.refreshBtn, margin: '16px auto' }} onClick={fetchData}>
-            <RefreshCw size={14} /> Try Again
+          <button className={shared.refreshBtn} style={{ margin: '16px auto' }} onClick={fetchData} aria-label="Retry loading data">
+            <RefreshCw size={14} aria-hidden="true" /> Try Again
           </button>
         </div>
       </div>

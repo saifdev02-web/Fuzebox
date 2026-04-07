@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FileText, RefreshCw, Download, TrendingUp, DollarSign, Zap, Shield } from 'lucide-react';
 import { getComparison, getAllTelemetry } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 export default function ExecutiveSummary() {
   const [data, setData] = useState(null);
@@ -65,11 +66,11 @@ export default function ExecutiveSummary() {
             Executive Summary
           </h1>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button onClick={fetchData} disabled={loading} style={s.btn}>
-              <RefreshCw size={14} /> {loading ? 'Loading...' : 'Refresh'}
+            <button onClick={fetchData} disabled={loading} style={s.btn} aria-label="Refresh report data">
+              <RefreshCw size={14} aria-hidden="true" /> {loading ? 'Loading...' : 'Refresh'}
             </button>
-            <button onClick={handleExport} style={{ ...s.btn, background: 'var(--accent)', color: '#fff', border: 'none' }}>
-              <Download size={14} /> Export PDF
+            <button onClick={handleExport} style={{ ...s.btn, background: 'var(--accent)', color: '#fff', border: 'none' }} aria-label="Export report as PDF">
+              <Download size={14} aria-hidden="true" /> Export PDF
             </button>
           </div>
         </div>
@@ -108,7 +109,7 @@ export default function ExecutiveSummary() {
         </div>
 
         {/* Performance Comparison */}
-        <div style={{ ...s.card, marginBottom: 24 }}>
+        <div style={{ ...s.card, marginBottom: 24 }} role="region" aria-label="Performance comparison">
           <div style={s.sectionTitle}>Performance Comparison: V1 vs V2</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
             {overall && [
@@ -148,7 +149,7 @@ export default function ExecutiveSummary() {
         </div>
 
         {/* Cost Analysis */}
-        <div style={{ ...s.card, marginBottom: 24 }}>
+        <div style={{ ...s.card, marginBottom: 24 }} role="region" aria-label="Cost analysis">
           <div style={s.sectionTitle}>Cost Analysis & ROI Projection</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
             <div style={s.costCard}>
@@ -171,7 +172,7 @@ export default function ExecutiveSummary() {
 
         {/* Per-Agent Breakdown */}
         {data?.per_agent && (
-          <div style={{ ...s.card, marginBottom: 24 }}>
+          <div style={{ ...s.card, marginBottom: 24 }} role="region" aria-label="Per-agent performance">
             <div style={s.sectionTitle}>Per-Agent Performance</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
               {[
@@ -216,7 +217,7 @@ export default function ExecutiveSummary() {
         )}
 
         {/* Recommendation */}
-        <div style={{ ...s.card, background: 'linear-gradient(135deg, rgba(232,132,42,0.06), rgba(232,132,42,0.02))', border: '1px solid rgba(232,132,42,0.2)' }}>
+        <div style={{ ...s.card, background: 'linear-gradient(135deg, rgba(232,132,42,0.06), rgba(232,132,42,0.02))', border: '1px solid rgba(232,132,42,0.2)' }} role="region" aria-label="Recommendation">
           <div style={s.sectionTitle}>Recommendation</div>
           <div style={{ fontSize: '0.95rem', lineHeight: 1.8, color: 'var(--text-primary)' }}>
             <p>

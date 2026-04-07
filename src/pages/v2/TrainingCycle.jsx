@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { RefreshCw, Play, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react';
 import { runV1, runV2, getTestInputs } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 const FALLBACK_INPUTS = [
   "I can't log in to my account. I've tried resetting my password three times and it still says invalid credentials.",

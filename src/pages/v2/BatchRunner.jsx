@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { PlayCircle, CheckCircle, Clock, AlertCircle, BarChart3, RefreshCw, DollarSign } from 'lucide-react';
 import { runV1, runV2, getTestInputs } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 export default function BatchRunner() {
   const [testInputs, setTestInputs] = useState([]);
@@ -128,11 +129,11 @@ export default function BatchRunner() {
               Runs each test input through both V1 and V2 pipelines, then shows a comparison summary
             </div>
           </div>
-          <button style={s.runBtn} onClick={handleBatchRun} disabled={running || !testInputs.length}>
+          <button style={s.runBtn} onClick={handleBatchRun} disabled={running || !testInputs.length} aria-label={running ? 'Batch running' : 'Start batch run'}>
             {running ? (
-              <><RefreshCw size={16} className="spin" /> Running...</>
+              <><RefreshCw size={16} className="spin" aria-hidden="true" /> Running...</>
             ) : (
-              <><PlayCircle size={16} /> Start Batch Run</>
+              <><PlayCircle size={16} aria-hidden="true" /> Start Batch Run</>
             )}
           </button>
         </div>
@@ -144,7 +145,7 @@ export default function BatchRunner() {
               <span style={{ color: 'var(--text-secondary)' }}>{progress.phase}</span>
               <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{progress.current}/{progress.total}</span>
             </div>
-            <div style={s.progressTrack}>
+            <div style={s.progressTrack} role="progressbar" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100} aria-label="Batch progress">
               <div style={s.progressFill(pct)} />
             </div>
           </div>
@@ -184,7 +185,7 @@ export default function BatchRunner() {
       {/* Results Table */}
       {results.length > 0 && (
         <div style={{ ...s.card, marginTop: 20, padding: 0, overflow: 'hidden' }}>
-          <table style={s.table}>
+          <table style={s.table} aria-label="Batch run results">
             <thead>
               <tr style={s.thead}>
                 <th style={s.th}>ID</th>
@@ -234,11 +235,11 @@ export default function BatchRunner() {
 }
 
 function renderStatus(status) {
-  if (status === 'done') return <CheckCircle size={16} style={{ color: 'var(--success)' }} />;
-  if (status === 'error') return <AlertCircle size={16} style={{ color: 'var(--danger)' }} />;
-  if (status === 'running') return <RefreshCw size={16} className="spin" style={{ color: 'var(--accent)' }} />;
-  if (status === 'pending') return <Clock size={16} style={{ color: 'var(--text-secondary)' }} />;
-  return <Clock size={16} style={{ color: 'var(--text-secondary)' }} />;
+  if (status === 'done') return <CheckCircle size={16} style={{ color: 'var(--success)' }} aria-label="Complete" />;
+  if (status === 'error') return <AlertCircle size={16} style={{ color: 'var(--danger)' }} aria-label="Error" />;
+  if (status === 'running') return <RefreshCw size={16} className="spin" style={{ color: 'var(--accent)' }} aria-label="Running" />;
+  if (status === 'pending') return <Clock size={16} style={{ color: 'var(--text-secondary)' }} aria-label="Pending" />;
+  return <Clock size={16} style={{ color: 'var(--text-secondary)' }} aria-label="Pending" />;
 }
 
 const s = {

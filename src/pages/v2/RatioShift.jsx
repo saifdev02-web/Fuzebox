@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, RefreshCw, Users, Bot } from 'lucide-react';
 import { getComparison } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 const s = {
   grid: {
@@ -271,7 +272,7 @@ export default function RatioShift() {
       )}
 
       {error ? (
-        <div style={s.empty} role="alert">
+        <div className={shared.emptyState} role="alert">
           <p>{error}</p>
           <p style={{ marginTop: 8, fontSize: '0.82rem' }}>
             Run both V1 and V2 pipelines to see the ratio shift.

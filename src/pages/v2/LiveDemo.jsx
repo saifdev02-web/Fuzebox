@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Monitor, Play, CheckCircle, Clock, Zap, RefreshCw, Maximize2, Minimize2, DollarSign } from 'lucide-react';
 import { runV1, runV2, getTestInputs } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 const PIPELINE_STEPS_V1 = [
   { key: 'classify', label: 'Agent 1: Classify', desc: 'Intake Classifier categorizes the request', icon: Zap },
@@ -115,17 +116,19 @@ export default function LiveDemo() {
       {/* Input Area */}
       <div style={{ ...s.card, marginBottom: 24 }}>
         <div style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
-          <div style={s.versionToggle}>
+          <div style={s.versionToggle} role="group" aria-label="Pipeline version">
             <button
               style={version === 'v1' ? s.versionActive : s.versionBtn}
               onClick={() => setVersion('v1')}
+              aria-pressed={version === 'v1'}
             >V1 Baseline</button>
             <button
               style={version === 'v2' ? s.versionActive : s.versionBtn}
               onClick={() => setVersion('v2')}
+              aria-pressed={version === 'v2'}
             >V2 Tuned</button>
           </div>
-          <button onClick={loadRandomInput} style={s.randomBtn} disabled={!testInputs.length}>
+          <button onClick={loadRandomInput} style={s.randomBtn} disabled={!testInputs.length} aria-label="Load random test input">
             <RefreshCw size={14} /> Random Input
           </button>
         </div>
@@ -135,12 +138,14 @@ export default function LiveDemo() {
           placeholder="Type any service request here... or click 'Random Input' to load a test case"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          aria-label="Service request input"
         />
 
         <button
           style={{ ...s.runBtn, fontSize: fullscreen ? '1.1rem' : '0.95rem', padding: fullscreen ? '16px 32px' : '14px 28px' }}
           onClick={handleRun}
           disabled={running || !input.trim()}
+          aria-label={running ? 'Pipeline running' : `Run ${version.toUpperCase()} pipeline`}
         >
           <Play size={18} /> {running ? 'Processing...' : `Run ${version.toUpperCase()} Pipeline`}
         </button>
@@ -149,17 +154,17 @@ export default function LiveDemo() {
       {/* Pipeline Visualization */}
       <div style={{ ...s.card, marginBottom: 24 }}>
         <div style={s.cardTitle}>Pipeline Execution</div>
-        <div style={s.pipelineRow}>
+        <div style={s.pipelineRow} role="list" aria-label="Pipeline steps">
           {steps.map((step, i) => {
             const status = stepState[step.key] || 'pending';
             const Icon = step.icon;
             return (
-              <div key={step.key} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={s.pipelineNode(status, fullscreen)}>
+              <div key={step.key} style={{ display: 'flex', alignItems: 'center' }} role="listitem">
+                <div style={s.pipelineNode(status, fullscreen)} aria-label={`${step.label}: ${status}`}>
                   <div style={s.pipelineIcon(status)}>
-                    {status === 'done' ? <CheckCircle size={fullscreen ? 24 : 20} /> :
-                     status === 'running' ? <Clock size={fullscreen ? 24 : 20} className="spin" /> :
-                     <Icon size={fullscreen ? 24 : 20} />}
+                    {status === 'done' ? <CheckCircle size={fullscreen ? 24 : 20} aria-hidden="true" /> :
+                     status === 'running' ? <Clock size={fullscreen ? 24 : 20} className="spin" aria-hidden="true" /> :
+                     <Icon size={fullscreen ? 24 : 20} aria-hidden="true" />}
                   </div>
                   <div style={{ fontWeight: 600, fontSize: fullscreen ? '0.95rem' : '0.82rem', color: 'var(--text-primary)' }}>
                     {step.label}
@@ -169,7 +174,7 @@ export default function LiveDemo() {
                   </div>
                 </div>
                 {i < steps.length - 1 && (
-                  <div style={s.pipelineArrow(stepState[step.key] === 'done')}>→</div>
+                  <div style={s.pipelineArrow(stepState[step.key] === 'done')} aria-hidden="true">→</div>
                 )}
               </div>
             );
@@ -179,7 +184,7 @@ export default function LiveDemo() {
 
       {/* Results */}
       {result && !result.error && (
-        <div style={s.card} ref={resultsRef}>
+        <div style={s.card} ref={resultsRef} role="region" aria-label="Pipeline results">
           <div style={s.cardTitle}>Results</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginBottom: 20 }}>
             <div style={s.metricCard}>
@@ -293,7 +298,7 @@ export default function LiveDemo() {
       )}
 
       {result?.error && (
-        <div style={{ ...s.card, background: 'rgba(239,68,68,0.06)', color: 'var(--danger)' }}>
+        <div style={{ ...s.card, background: 'rgba(239,68,68,0.06)', color: 'var(--danger)' }} role="alert">
           Error: {result.error}
         </div>
       )}

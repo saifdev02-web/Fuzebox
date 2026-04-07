@@ -3,6 +3,7 @@ import { Activity, RefreshCw, Database } from 'lucide-react';
 import KPICard from '../../components/KPICard';
 import DataTable from '../../components/DataTable';
 import { getAgentTelemetry } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 function timeAgo(dateStr) {
   if (!dateStr) return '—';
@@ -192,16 +193,10 @@ export default function TelemetryConsole() {
 
       {/* Empty State */}
       {!loading && Object.values(agentData).every((d) => !d?.count) && (
-        <div style={{
-          textAlign: 'center', padding: '48px 24px', marginBottom: 28,
-          background: 'var(--surface)', borderRadius: 'var(--radius)',
-          boxShadow: 'var(--shadow-card)',
-        }}>
-          <Database size={40} style={{ color: 'var(--border)', marginBottom: 12 }} />
-          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 6 }}>
-            No telemetry data yet
-          </div>
-          <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: 420, margin: '0 auto' }}>
+        <div className={shared.card} style={{ textAlign: 'center', padding: '48px 24px', marginBottom: 28 }}>
+          <Database size={40} style={{ color: 'var(--border)', marginBottom: 12 }} aria-hidden="true" />
+          <div className={shared.emptyTitle}>No telemetry data yet</div>
+          <div className={shared.emptySub}>
             Run a V1 or V2 pipeline from the Training Cycle or Live Demo page to start generating telemetry data.
           </div>
         </div>

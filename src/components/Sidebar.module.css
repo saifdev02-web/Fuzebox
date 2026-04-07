@@ -227,3 +227,53 @@
   background: rgba(232, 132, 42, 0.1) !important;
   font-weight: 600;
 }
+
+/* Responsive: collapse sidebar on smaller screens */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 220px;
+    padding: 16px 14px;
+  }
+
+  .navItem {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+  }
+
+  .logoIcon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .logoName {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 12px 10px;
+  }
+
+  .logo {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+  }
+
+  .navItem {
+    padding: 6px 8px;
+    font-size: 0.78rem;
+    gap: 6px;
+  }
+
+  .sectionTitle {
+    font-size: 0.68rem;
+  }
+
+  .loadBtn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}

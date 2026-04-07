@@ -49,8 +49,9 @@ function AppContent() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Sidebar />
-      <main style={{ marginLeft: 260, flex: 1, padding: '32px 40px', minWidth: 0 }}>
+      <main id="main-content" role="main" style={{ marginLeft: 260, flex: 1, padding: '32px 40px', minWidth: 0 }}>
         <Page />
       </main>
     </div>

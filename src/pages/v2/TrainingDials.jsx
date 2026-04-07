@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SlidersHorizontal, RotateCcw, Save, Sparkles } from 'lucide-react';
 import { getTuningParams, setAgentTuning, resetAgentTuning, getPresets } from '../../api/client';
+import shared from './v2-shared.module.css';
 
 const AGENTS = [
   { id: 'intake_classifier', name: 'Intake Classifier' },
@@ -218,7 +219,7 @@ export default function TrainingDials() {
         Tune each agent's parameters to improve performance. Each dial maps to a specific change in the agent's prompts, configuration, or execution logic.
       </p>
 
-      {message && <div style={s.status(message.type)} role="status">{message.text}</div>}
+      {message && <div className={message.type === 'success' ? shared.successMsg : shared.errorMsg} role="status" style={{ marginBottom: 16 }}>{message.text}</div>}
 
       <div style={s.grid}>
         {AGENTS.map((agent) => {

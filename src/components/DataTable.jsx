@@ -41,22 +41,22 @@ const s = {
 /**
  * Generic data table. Pass columns (array of { key, label, render? }) and rows (array of objects).
  */
-export default function DataTable({ columns, rows, emptyMessage = 'No data available' }) {
+export default function DataTable({ columns, rows, emptyMessage = 'No data available', ariaLabel = 'Data table' }) {
   if (!rows || !rows.length) {
     return (
-      <div style={s.wrapper}>
+      <div style={s.wrapper} role="region" aria-label={ariaLabel}>
         <div style={s.empty}>{emptyMessage}</div>
       </div>
     );
   }
 
   return (
-    <div style={s.wrapper}>
-      <table style={s.table}>
+    <div style={s.wrapper} role="region" aria-label={ariaLabel}>
+      <table style={s.table} aria-label={ariaLabel}>
         <thead>
           <tr>
             {columns.map((col) => (
-              <th key={col.key} style={{ ...s.th, ...(col.style || {}) }}>{col.label}</th>
+              <th key={col.key} scope="col" style={{ ...s.th, ...(col.style || {}) }}>{col.label}</th>
             ))}
           </tr>
         </thead>
